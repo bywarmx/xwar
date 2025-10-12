@@ -1,1 +1,618 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>Bywarrior™</title>
+    <link rel="SHORTCUT ICON" href="files/images/vngicon.png" type="image/x-icon" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { 
+            font-family: verdana; 
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .main-content {
+            margin-top: 50px;
+        }
+        
+        .logo {
+            font-size: 85pt;
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 0 0 10px rgba(102, 126, 234, 0.7);
+            margin-bottom: 30px;
+        }
+        
+        .tagline {
+            font-size: 18pt;
+            color: #ccc;
+            margin-bottom: 50px;
+        }
+        
+        .contact-btn {
+            background: linear-gradient(to right, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 20px 40px;
+            border-radius: 50px;
+            font-size: 18pt;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            margin-top: 30px;
+        }
+        
+        .contact-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.5);
+        }
+        
+        /* Modal de contacto - COMPACTO Y SIN SCROLLBAR */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .modal-content {
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            width: 95%;
+            max-width: 400px;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+            animation: slideUp 0.4s;
+            margin: auto;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        @keyframes slideUp {
+            from { transform: translate(-50%, -40%); opacity: 0; }
+            to { transform: translate(-50%, -50%); opacity: 1; }
+        }
+        
+        .modal-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(to right, #0088cc, #25D366, #ea4335);
+        }
+        
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 22px;
+            color: #888;
+            cursor: pointer;
+            transition: color 0.3s;
+            background: none;
+            border: none;
+        }
+        
+        .close-btn:hover {
+            color: #333;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        
+        .modal-logo {
+            font-size: 32px;
+            margin-bottom: 8px;
+            color: #0088cc;
+        }
+        
+        .modal-title {
+            color: #333;
+            margin-bottom: 6px;
+            font-size: 20px;
+        }
+        
+        .description {
+            color: #666;
+            font-size: 12px;
+            line-height: 1.3;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #444;
+            display: flex;
+            align-items: center;
+            font-size: 12px;
+        }
+        
+        label i {
+            margin-right: 6px;
+            width: 14px;
+            text-align: center;
+            font-size: 12px;
+        }
+        
+        .contact-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 12px;
+            transition: all 0.3s;
+        }
+        
+        .contact-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2);
+        }
+        
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            resize: vertical;
+            min-height: 80px;
+            font-size: 12px;
+            transition: all 0.3s;
+        }
+        
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2);
+        }
+        
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 8px;
+            margin-top: 20px;
+        }
+        
+        button.form-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        button.form-btn i {
+            margin-right: 4px;
+            font-size: 12px;
+        }
+        
+        #sendButton {
+            background: linear-gradient(to right, #667eea, #764ba2);
+            color: white;
+        }
+        
+        #sendButton:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3);
+        }
+        
+        #clearButton {
+            background-color: #f1f3f4;
+            color: #444;
+        }
+        
+        #clearButton:hover {
+            background-color: #e4e6e8;
+            transform: translateY(-2px);
+        }
+        
+        .status {
+            margin-top: 15px;
+            padding: 8px;
+            border-radius: 6px;
+            text-align: center;
+            font-weight: 500;
+            display: none;
+            font-size: 12px;
+        }
+        
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        
+        .footer {
+            margin-top: 15px;
+            text-align: center;
+            font-size: 10px;
+            color: #888;
+        }
+        
+        .contact-options {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 10px;
+        }
+        
+        .contact-option {
+            flex: 1;
+            text-align: center;
+            padding: 6px;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 10px;
+        }
+        
+        .contact-option.active {
+            border-color: #667eea;
+            background-color: #f0f4ff;
+        }
+        
+        .contact-option i {
+            font-size: 16px;
+            margin-bottom: 2px;
+        }
+        
+        .telegram-option i {
+            color: #0088cc;
+        }
+        
+        .whatsapp-option i {
+            color: #25D366;
+        }
+        
+        .email-option i {
+            color: #ea4335;
+        }
+        
+        @media (max-width: 768px) {
+            .logo {
+                font-size: 60pt;
+            }
+            
+            .tagline {
+                font-size: 14pt;
+            }
+            
+            .contact-btn {
+                font-size: 14pt;
+                padding: 15px 30px;
+            }
+            
+            .modal-content {
+                padding: 15px;
+                margin: 10px;
+                width: calc(100% - 20px);
+            }
+            
+            .button-container {
+                flex-direction: column;
+            }
+            
+            .contact-options {
+                flex-direction: column;
+            }
+        }
+    </style>  
+</head>
+<body>
+    <!-- Contenido principal -->
+    <div class="main-content">
+        <div class="logo">Bywarrior™</div>
+        <div class="tagline">Soluciones digitales innovadoras</div>
+        <button class="contact-btn">
+            <i class="fas fa-envelope"></i> Contactar
+        </button>
+    </div>
 
+    <!-- Modal de contacto -->
+    <div id="contactModal" class="modal">
+        <div class="modal-content">
+            <button class="close-btn">&times;</button>
+            
+            <div class="header">
+                <div class="modal-logo">
+                    <i class="fab fa-telegram"></i>
+                </div>
+                <h2 class="modal-title">Formulario de Contacto</h2>
+                <p class="description">Completa al menos un método de contacto y tu mensaje. La información se enviará a través de Telegram.</p>
+            </div>
+            
+            <form id="contactForm">
+                <div class="form-group">
+                    <div class="contact-options">
+                        <div class="contact-option telegram-option active" data-type="telegram">
+                            <i class="fab fa-telegram"></i>
+                            <div>Telegram</div>
+                        </div>
+                        <div class="contact-option whatsapp-option" data-type="whatsapp">
+                            <i class="fab fa-whatsapp"></i>
+                            <div>WhatsApp</div>
+                        </div>
+                        <div class="contact-option email-option" data-type="email">
+                            <i class="fas fa-envelope"></i>
+                            <div>Email</div>
+                        </div>
+                    </div>
+                    
+                    <div id="contactFields">
+                        <div class="form-group">
+                            <label for="telegram"><i class="fab fa-telegram"></i>Usuario de Telegram:</label>
+                            <input type="text" id="telegram" class="contact-input" placeholder="@usuario_telegram">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="message"><i class="fas fa-comment-alt"></i>Mensaje:</label>
+                    <textarea id="message" placeholder="Escribe tu mensaje aquí..."></textarea>
+                </div>
+                
+                <div class="button-container">
+                    <button type="button" id="sendButton" class="form-btn">
+                        <i class="fas fa-paper-plane"></i> Enviar Mensaje
+                    </button>
+                    <button type="button" id="clearButton" class="form-btn">
+                        <i class="fas fa-eraser"></i> Limpiar
+                    </button>
+                </div>
+                
+                <div id="status" class="status"></div>
+            </form>
+            
+            <div class="footer">
+                <p>La información se enviará a través del bot de Telegram</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            const botToken = '8157586356:AAGCyVhrGzUhdziV6b9AZsfLkBvqcuL70_k';
+            const chatId = '394034313';
+            let currentContactType = 'telegram';
+            
+            // Deshabilitar clic derecho
+            $(document).bind("contextmenu", function(e) {
+                return false;
+            });
+            
+            // Abrir modal de contacto
+            $('.contact-btn').click(function() {
+                $('#contactModal').fadeIn();
+            });
+            
+            // Cerrar modal de contacto
+            $('.close-btn').click(function() {
+                $('#contactModal').fadeOut();
+            });
+            
+            // Cerrar modal al hacer clic fuera del contenido
+            $(window).click(function(event) {
+                if ($(event.target).is('#contactModal')) {
+                    $('#contactModal').fadeOut();
+                }
+            });
+            
+            // Manejar selección de tipo de contacto
+            $('.contact-option').click(function() {
+                $('.contact-option').removeClass('active');
+                $(this).addClass('active');
+                currentContactType = $(this).data('type');
+                updateContactField();
+            });
+            
+            // Actualizar campo de contacto según el tipo seleccionado
+            function updateContactField() {
+                let fieldHTML = '';
+                
+                if (currentContactType === 'telegram') {
+                    fieldHTML = `
+                        <div class="form-group">
+                            <label for="telegram"><i class="fab fa-telegram"></i>Usuario de Telegram:</label>
+                            <input type="text" id="telegram" class="contact-input" placeholder="@usuario_telegram">
+                        </div>
+                    `;
+                } else if (currentContactType === 'whatsapp') {
+                    fieldHTML = `
+                        <div class="form-group">
+                            <label for="whatsapp"><i class="fab fa-whatsapp"></i>Número de WhatsApp:</label>
+                            <input type="text" id="whatsapp" class="contact-input" placeholder="+1234567890">
+                        </div>
+                    `;
+                } else if (currentContactType === 'email') {
+                    fieldHTML = `
+                        <div class="form-group">
+                            <label for="email"><i class="fas fa-envelope"></i>Correo Electrónico:</label>
+                            <input type="email" id="email" class="contact-input" placeholder="usuario@ejemplo.com">
+                        </div>
+                    `;
+                }
+                
+                $('#contactFields').html(fieldHTML);
+            }
+            
+            // Función para mostrar estado
+            function showStatus(message, type) {
+                const status = $('#status');
+                status.removeClass('success error info');
+                status.addClass(type);
+                status.html(`<i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'}"></i> ${message}`);
+                status.fadeIn();
+                
+                setTimeout(function() {
+                    status.fadeOut();
+                }, 5000);
+            }
+            
+            // Enviar mensaje
+            $('#sendButton').click(function() {
+                const message = $('#message').val().trim();
+                let contactValue = '';
+                
+                // Obtener valor del campo de contacto según el tipo seleccionado
+                if (currentContactType === 'telegram') {
+                    contactValue = $('#telegram').val().trim();
+                } else if (currentContactType === 'whatsapp') {
+                    contactValue = $('#whatsapp').val().trim();
+                } else if (currentContactType === 'email') {
+                    contactValue = $('#email').val().trim();
+                }
+                
+                if (!message) {
+                    showStatus('Por favor, escribe un mensaje antes de enviar.', 'error');
+                    return;
+                }
+                
+                if (!contactValue) {
+                    showStatus(`Por favor, proporciona tu ${currentContactType === 'telegram' ? 'usuario de Telegram' : currentContactType === 'whatsapp' ? 'número de WhatsApp' : 'correo electrónico'}.`, 'error');
+                    return;
+                }
+                
+                // Crear mensaje estructurado para Telegram
+                let formattedMessage = '';
+                
+                if (currentContactType === 'telegram') {
+                    formattedMessage = `📱 <b>Nuevo mensaje de contacto - Bywarrior™</b>\n\n` +
+                                      `👤 <b>Usuario de Telegram:</b> ${contactValue}\n\n` +
+                                      `💬 <b>Mensaje:</b>\n${message}`;
+                } else if (currentContactType === 'whatsapp') {
+                    formattedMessage = `📱 <b>Nuevo mensaje de contacto - Bywarrior™</b>\n\n` +
+                                      `📞 <b>WhatsApp:</b> ${contactValue}\n\n` +
+                                      `💬 <b>Mensaje:</b>\n${message}`;
+                } else if (currentContactType === 'email') {
+                    formattedMessage = `📱 <b>Nuevo mensaje de contacto - Bywarrior™</b>\n\n` +
+                                      `📧 <b>Email:</b> ${contactValue}\n\n` +
+                                      `💬 <b>Mensaje:</b>\n${message}`;
+                }
+                
+                // Mostrar estado de envío
+                showStatus('Enviando mensaje...', 'info');
+                
+                // Deshabilitar botón mientras se envía
+                $('#sendButton').prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Enviando...');
+                
+                // Enviar mensaje a través de la API de Telegram
+                $.ajax({
+                    url: `https://api.telegram.org/bot${botToken}/sendMessage`,
+                    method: 'POST',
+                    data: {
+                        chat_id: chatId,
+                        text: formattedMessage,
+                        parse_mode: 'HTML'
+                    },
+                    success: function(response) {
+                        if (response.ok) {
+                            showStatus('¡Mensaje enviado correctamente!', 'success');
+                            // Limpiar formulario
+                            $('#message').val('');
+                            if (currentContactType === 'telegram') {
+                                $('#telegram').val('');
+                            } else if (currentContactType === 'whatsapp') {
+                                $('#whatsapp').val('');
+                            } else if (currentContactType === 'email') {
+                                $('#email').val('');
+                            }
+                            
+                            // Cerrar modal después de 2 segundos
+                            setTimeout(function() {
+                                $('#contactModal').fadeOut();
+                            }, 2000);
+                        } else {
+                            showStatus('Error al enviar el mensaje: ' + response.description, 'error');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        showStatus('Error de conexión: ' + error, 'error');
+                    },
+                    complete: function() {
+                        // Restaurar botón
+                        $('#sendButton').prop('disabled', false).html('<i class="fas fa-paper-plane"></i> Enviar Mensaje');
+                    }
+                });
+            });
+            
+            // Limpiar formulario
+            $('#clearButton').click(function() {
+                $('#message').val('');
+                if (currentContactType === 'telegram') {
+                    $('#telegram').val('');
+                } else if (currentContactType === 'whatsapp') {
+                    $('#whatsapp').val('');
+                } else if (currentContactType === 'email') {
+                    $('#email').val('');
+                }
+                showStatus('Formulario limpiado', 'info');
+            });
+            
+            // Permitir enviar con Ctrl+Enter
+            $('#message').keydown(function(e) {
+                if (e.ctrlKey && e.keyCode === 13) {
+                    $('#sendButton').click();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
